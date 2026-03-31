@@ -1,0 +1,30 @@
+# Java
+*.class
+*.jar
+*.war
+build/
+.gradle/
+out/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Node
+node_modules/
+dist/
+.next/
+
+# 환경변수 (절대 커밋 금지)
+.env
+*.env.local
+
+# macOS
+.DS_Store
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
