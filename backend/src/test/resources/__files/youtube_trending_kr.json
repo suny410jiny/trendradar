@@ -1,0 +1,66 @@
+{
+  "kind": "youtube#videoListResponse",
+  "etag": "test-etag",
+  "items": [
+    {
+      "kind": "youtube#video",
+      "etag": "item-etag-1",
+      "id": "dQw4w9WgXcQ",
+      "snippet": {
+        "publishedAt": "2026-03-31T10:00:00Z",
+        "channelId": "UCuAXFkgsw1L7xaCfnd5JJOw",
+        "title": "테스트 영상 제목 1",
+        "description": "테스트 설명",
+        "channelTitle": "테스트 채널",
+        "categoryId": "10",
+        "thumbnails": {
+          "high": {
+            "url": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        }
+      },
+      "contentDetails": {
+        "duration": "PT3M33S"
+      },
+      "statistics": {
+        "viewCount": "1500000",
+        "likeCount": "50000",
+        "commentCount": "12000"
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "item-etag-2",
+      "id": "abc123xyz",
+      "snippet": {
+        "publishedAt": "2026-03-30T08:00:00Z",
+        "channelId": "UC_test_channel_2",
+        "title": "테스트 영상 제목 2",
+        "description": "두번째 테스트",
+        "channelTitle": "테스트 채널 2",
+        "categoryId": "24",
+        "thumbnails": {
+          "high": {
+            "url": "https://i.ytimg.com/vi/abc123xyz/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        }
+      },
+      "contentDetails": {
+        "duration": "PT10M15S"
+      },
+      "statistics": {
+        "viewCount": "800000",
+        "likeCount": "30000",
+        "commentCount": "5000"
+      }
+    }
+  ],
+  "pageInfo": {
+    "totalResults": 2,
+    "resultsPerPage": 50
+  }
+}

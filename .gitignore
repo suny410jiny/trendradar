@@ -18,13 +18,18 @@ dist/
 
 # 환경변수 (절대 커밋 금지)
 .env
-*.env.local
+*.env
+.env.local
+.env.*.local
 
 # macOS
 .DS_Store
 
 # Docker
 docker-compose.override.yml
+
+# Local context (프라이버시)
+.context/
 
 # Logs
 *.log
