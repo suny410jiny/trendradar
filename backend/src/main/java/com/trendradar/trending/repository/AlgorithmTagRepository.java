@@ -10,4 +10,6 @@ public interface AlgorithmTagRepository extends JpaRepository<AlgorithmTag, Long
     List<AlgorithmTag> findByVideoId(String videoId);
 
     List<AlgorithmTag> findByVideoIdIn(List<String> videoIds);
+
+    void deleteByVideoIdIn(List<String> videoIds);
 }

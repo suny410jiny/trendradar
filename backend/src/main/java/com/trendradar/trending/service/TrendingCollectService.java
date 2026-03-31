@@ -10,11 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.scheduling.annotation.Async;
+
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
 @Service
@@ -46,6 +49,12 @@ public class TrendingCollectService {
         log.info("Saved {} trending videos for country={}", saved.size(), countryCode);
 
         return saved;
+    }
+
+    @Async("trendingCollectExecutor")
+    public CompletableFuture<List<TrendingVideo>> collectAsync(String countryCode) {
+        List<TrendingVideo> result = collect(countryCode);
+        return CompletableFuture.completedFuture(result);
     }
 
     private TrendingVideo toTrendingVideo(YouTubeVideoItem item, String countryCode,
