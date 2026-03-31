@@ -14,7 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:5173",
                     "http://localhost:3000",
                     "https://*.vercel.app",
-                    "https://trendradar.io"
+                    "https://trendradar.io",
+                    "https://trend-rada.com"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
