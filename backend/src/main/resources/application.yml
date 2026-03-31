@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: trendradar
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
