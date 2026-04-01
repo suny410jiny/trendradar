@@ -5,47 +5,34 @@
 ## 현재 상태
 
 ### 완료된 Phase
-- ✅ Phase 0-8 완료
-- ✅ 백엔드: 26개 테스트 통과, API 6개, 포트 8081
-- ✅ 프론트: React + shadcn + Tailwind, 전체 화면 구현, 포트 5180
-- ✅ Vultr 서버: SSL 발급 (trend-rada.com, api.trend-rada.com)
-- ✅ GitHub 푸시 완료 (suny410jiny/trendradar)
-- ✅ SSH 키 등록 (ssh root@158.247.241.196)
+- ✅ Phase 0-12 완료 (MVP 완성)
+- ✅ 백엔드: Vultr 배포 완료 (Docker Compose, 8081 포트)
+- ✅ 프론트: Vercel 배포 완료 (https://trend-rada.com)
+- ✅ API: https://api.trend-rada.com (SSL, Nginx 리버스 프록시)
+- ✅ 5개국 데이터 수집 완료 (KR, US, JP, GB, DE x 50개)
+- ✅ 알고리즘 태그 동작 (NEW_ENTRY, HOT_COMMENT, HIGH_ENGAGE, GLOBAL)
+- ✅ 1시간 주기 자동 수집 스케줄러 동작
 
-### 포트 정보 (다른 프로젝트와 충돌 방지)
-- 백엔드: **8081** (다른 프로젝트가 8080 사용)
-- 프론트: **5180** (Vite dev server)
-- CORS: `http://localhost:*` 패턴으로 허용
+### 알려진 이슈
+- ⚠️ 알고리즘 태그 중복: 동일 video_id에 국가 수만큼 태그 중복 저장됨
+- ⚠️ Claude API 키 미설정: AI 브리핑 "준비 중" 메시지 반환
+- ⚠️ 프론트 → 백엔드 실제 브라우저 연동 미확인 (API는 정상)
 
-### 미커밋 변경사항
-- 포트 변경 (8080→8081): application.yml, Dockerfile, docker-compose.yml, nginx.conf
-- 프론트 포트 (5180): vite.config.ts, .env.local, api/client.ts
-- CORS 수정: WebConfig.java (`http://localhost:*`)
-- CLAUDE.md SSH 정보 추가
-→ **다음 세션 시작 시 커밋 + 푸시 필요**
+## 다음 작업 (우선순위)
 
-## 다음 작업
+### 1순위: 알고리즘 태그 중복 버그 수정
+- 원인: collectAllCountries()에서 5개국 수집 후 allVideos에 전체 합쳐서 태그 계산
+- 같은 videoId가 여러 국가에 존재 시 태그가 중복 계산됨
+- 해결: video_id 기준 중복 제거 후 태그 계산, 또는 태그 저장 시 UPSERT
 
-### 1순위: 미커밋 변경사항 커밋 + 푸시
-```
-git add .
-git commit -m "chore: 포트 변경 (8081) 및 CORS 수정"
-git push origin main
-```
+### 2순위: Claude API 키 설정
+- .env에 CLAUDE_API_KEY 추가
+- AI 브리핑 실제 동작 확인
 
-### 2순위: Phase 9 - 프론트 Docker 빌드
-- frontend/Dockerfile 작성 (multi-stage: Node build → Nginx serve)
-- docker-compose.yml에 frontend 서비스 추가
+### 3순위: 프론트엔드 브라우저 연동 확인
+- trend-rada.com에서 실제 데이터 로드 확인
+- CORS 이슈 없는지 확인
 
-### 3순위: Phase 10 - 통합 테스트 & 연동
-- 백엔드 + 프론트 연동 확인 (실제 YouTube API 데이터)
-- 스케줄러 수동 트리거 → DB 데이터 확인 → 프론트 표시
-
-### 4순위: Phase 11 - Vultr 배포
-- git clone → docker compose up
-- Nginx SSL 프록시 → backend:8081 연결
-- 실제 도메인 접속 확인
-
-### 5순위: Phase 12 - 검증 마무리
-- 전체 흐름 E2E 확인
-- 모니터링 설정
+### 4순위: 모니터링 설정
+- Docker 로그 로테이션
+- 디스크/메모리 모니터링
