@@ -103,8 +103,10 @@
 ### 인프라
 - **Server:** Vultr Cloud Compute (Seoul, 2vCPU/4GB/120GB)
   - IP: 158.247.241.196
+  - SSH: `ssh root@158.247.241.196` (SSH 키 인증, 패스워드 불필요)
+  - 도메인: trend-rada.com, api.trend-rada.com (SSL 적용)
 - **Container:** Docker 29.3.1 + Docker Compose v5.1.1
-- **Web Server:** Nginx (리버스 프록시, SSL)
+- **Web Server:** Nginx (리버스 프록시, SSL Let's Encrypt)
 - **Frontend Deploy:** Vercel (무료)
 
 ### 외부 API
