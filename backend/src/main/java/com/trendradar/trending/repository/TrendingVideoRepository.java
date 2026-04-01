@@ -46,4 +46,22 @@ public interface TrendingVideoRepository extends JpaRepository<TrendingVideo, Lo
             @Param("videoIds") List<String> videoIds,
             @Param("from") OffsetDateTime from,
             @Param("to") OffsetDateTime to);
+
+    // 채널별 트렌딩 영상 조회 (시간 범위)
+    @Query("SELECT tv FROM TrendingVideo tv WHERE tv.channelId IN :channelIds " +
+            "AND tv.collectedAt BETWEEN :from AND :to")
+    List<TrendingVideo> findByChannelIdInAndCollectedAtBetween(
+            @Param("channelIds") List<String> channelIds,
+            @Param("from") OffsetDateTime from,
+            @Param("to") OffsetDateTime to);
+
+    // 최근 수집에서 고유 채널 ID 목록 (나라별)
+    @Query(value = "SELECT DISTINCT tv.channel_id FROM trending_videos tv " +
+            "WHERE tv.country_code = :countryCode AND tv.collected_at BETWEEN :from AND :to " +
+            "AND tv.channel_id IS NOT NULL",
+            nativeQuery = true)
+    List<String> findDistinctChannelIdsByCountryCode(
+            @Param("countryCode") String countryCode,
+            @Param("from") OffsetDateTime from,
+            @Param("to") OffsetDateTime to);
 }
