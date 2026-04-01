@@ -40,6 +40,29 @@ export interface ViewSnapshot {
   snapshotAt: string;
 }
 
+export type AlgorithmTag =
+  | 'SURGE'
+  | 'NEW_ENTRY'
+  | 'HOT_COMMENT'
+  | 'HIGH_ENGAGE'
+  | 'LONG_RUN'
+  | 'GLOBAL'
+  | 'COMEBACK';
+
+export const TAG_CONFIG: Record<AlgorithmTag, { label: string; emoji: string; color: string }> = {
+  SURGE:       { label: '급상승',   emoji: '🔥', color: 'bg-red-500/10 text-red-600 border-red-500/20' },
+  NEW_ENTRY:   { label: '신규진입', emoji: '🆕', color: 'bg-green-500/10 text-green-600 border-green-500/20' },
+  HOT_COMMENT: { label: '화제성',   emoji: '💬', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  HIGH_ENGAGE: { label: '고참여율', emoji: '❤️', color: 'bg-pink-500/10 text-pink-600 border-pink-500/20' },
+  LONG_RUN:    { label: '롱런',     emoji: '📺', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  GLOBAL:      { label: '글로벌',   emoji: '🌍', color: 'bg-sky-500/10 text-sky-600 border-sky-500/20' },
+  COMEBACK:    { label: '역주행',   emoji: '🔄', color: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
+};
+
+export const COUNTRY_FLAGS: Record<string, string> = {
+  KR: '🇰🇷', US: '🇺🇸', JP: '🇯🇵', GB: '🇬🇧', DE: '🇩🇪',
+};
+
 export interface BriefingResponse {
   country: string;
   countryName: string;
