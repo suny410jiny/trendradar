@@ -30,7 +30,7 @@ public class BriefingService {
         Country country = countryRepository.findById(countryCode)
                 .orElseThrow(() -> new NoSuchElementException("Country not found: " + countryCode));
 
-        List<TrendingVideoResponse> topVideos = trendingService.getTrending(countryCode, null, 10);
+        List<TrendingVideoResponse> topVideos = trendingService.getTrending(countryCode, null, null, 10);
 
         String prompt = buildPrompt(country.getNameKo(), topVideos);
         String summary = claudeApiClient.generateBriefing(prompt);

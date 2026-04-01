@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,16 +31,27 @@ public class TrendingService {
     private final ViewSnapshotRepository viewSnapshotRepository;
     private final CountryRepository countryRepository;
 
-    public List<TrendingVideoResponse> getTrending(String countryCode, Integer categoryId, int limit) {
+    public List<TrendingVideoResponse> getTrending(String countryCode, Integer categoryId, String tagType, int limit) {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         OffsetDateTime from = now.minusHours(2);
 
         List<TrendingVideo> videos = trendingVideoRepository
                 .findByCountryCodeAndCollectedAtBetweenOrderByRankPositionAsc(countryCode, from, now);
 
+        // 카테고리 필터
         if (categoryId != null) {
             videos = videos.stream()
                     .filter(v -> categoryId.equals(v.getCategoryId()))
+                    .toList();
+        }
+
+        // 태그 필터: 해당 태그를 가진 videoId 목록으로 필터링
+        if (tagType != null && !tagType.isBlank()) {
+            List<String> allVideoIds = videos.stream().map(TrendingVideo::getVideoId).toList();
+            Set<String> taggedVideoIds = new HashSet<>(
+                    algorithmTagRepository.findVideoIdsByTagType(allVideoIds, tagType));
+            videos = videos.stream()
+                    .filter(v -> taggedVideoIds.contains(v.getVideoId()))
                     .toList();
         }
 

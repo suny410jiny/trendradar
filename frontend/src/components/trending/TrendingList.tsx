@@ -4,8 +4,8 @@ import TrendingCard from './TrendingCard';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 export default function TrendingList() {
-  const { country, category } = useFilterStore();
-  const { data: videos, isLoading, error } = useTrending(country, category, 50);
+  const { country, category, tag } = useFilterStore();
+  const { data: videos, isLoading, error } = useTrending(country, category, tag, 50);
 
   if (isLoading) return <LoadingSpinner />;
 

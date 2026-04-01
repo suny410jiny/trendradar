@@ -1,5 +1,6 @@
 import CountrySelector from '@/components/common/CountrySelector';
 import CategoryFilter from '@/components/common/CategoryFilter';
+import AlgorithmTagFilter from '@/components/common/AlgorithmTagFilter';
 import BriefingCard from '@/components/common/BriefingCard';
 import TrendingList from '@/components/trending/TrendingList';
 
@@ -23,6 +24,11 @@ export default function HomePage() {
           {/* 카테고리 필터 */}
           <div className="mt-3">
             <CategoryFilter />
+          </div>
+
+          {/* 알고리즘 태그 필터 */}
+          <div className="mt-2">
+            <AlgorithmTagFilter />
           </div>
         </div>
       </header>

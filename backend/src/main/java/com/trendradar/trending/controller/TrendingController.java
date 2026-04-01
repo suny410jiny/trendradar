@@ -20,10 +20,11 @@ public class TrendingController {
     public ApiResponse<List<TrendingVideoResponse>> getTrending(
             @RequestParam String country,
             @RequestParam(required = false) Integer category,
+            @RequestParam(required = false) String tag,
             @RequestParam(defaultValue = "10") int limit) {
 
         int safeLimit = Math.min(Math.max(limit, 1), 50);
-        return ApiResponse.of(trendingService.getTrending(country, category, safeLimit));
+        return ApiResponse.of(trendingService.getTrending(country, category, tag, safeLimit));
     }
 
     @GetMapping("/trending/{videoId}/snapshots")

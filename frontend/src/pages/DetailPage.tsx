@@ -17,7 +17,7 @@ export default function DetailPage() {
   const { videoId } = useParams<{ videoId: string }>();
   const navigate = useNavigate();
   const { country } = useFilterStore();
-  const { data: videos } = useTrending(country, null, 50);
+  const { data: videos } = useTrending(country, null, null, 50);
   const { data: snapshots, isLoading: snapshotsLoading } = useSnapshots(videoId || '');
 
   const video: TrendingVideo | undefined = videos?.find((v) => v.videoId === videoId);
