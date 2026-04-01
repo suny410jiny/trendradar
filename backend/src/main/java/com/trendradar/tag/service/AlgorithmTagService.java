@@ -36,7 +36,16 @@ public class AlgorithmTagService {
             return Collections.emptyList();
         }
 
-        List<String> videoIds = videos.stream()
+        // videoId 기준 중복 제거 (같은 영상이 여러 국가에 존재할 수 있음)
+        List<TrendingVideo> uniqueVideos = new ArrayList<>(videos.stream()
+                .collect(Collectors.toMap(
+                        TrendingVideo::getVideoId,
+                        v -> v,
+                        (v1, v2) -> v1,
+                        LinkedHashMap::new))
+                .values());
+
+        List<String> videoIds = uniqueVideos.stream()
                 .map(TrendingVideo::getVideoId).toList();
 
         // Batch 쿼리: 24시간 전 데이터 (SURGE용)
@@ -52,10 +61,10 @@ public class AlgorithmTagService {
                         collectedAt.minusHours(2), collectedAt.plusHours(2)));
 
         // 인메모리: HOT_COMMENT 상위 10% 커트라인
-        double hotCommentCutoff = calculateRatioCutoff(videos, this::commentRatio);
+        double hotCommentCutoff = calculateRatioCutoff(uniqueVideos, this::commentRatio);
 
         // 인메모리: HIGH_ENGAGE 상위 10% 커트라인
-        double highEngageCutoff = calculateRatioCutoff(videos, this::likeRatio);
+        double highEngageCutoff = calculateRatioCutoff(uniqueVideos, this::likeRatio);
 
         // 기존 태그 삭제 후 재계산
         algorithmTagRepository.deleteByVideoIdIn(videoIds);
@@ -63,7 +72,7 @@ public class AlgorithmTagService {
         // 각 영상에 대해 태그 계산
         List<AlgorithmTag> allTags = new ArrayList<>();
 
-        for (TrendingVideo video : videos) {
+        for (TrendingVideo video : uniqueVideos) {
             List<AlgorithmTag> videoTags = new ArrayList<>();
 
             // SURGE
@@ -112,7 +121,7 @@ public class AlgorithmTagService {
         }
 
         List<AlgorithmTag> saved = algorithmTagRepository.saveAll(allTags);
-        log.info("Calculated {} tags for {} videos", saved.size(), videos.size());
+        log.info("Calculated {} tags for {} unique videos (from {} total)", saved.size(), uniqueVideos.size(), videos.size());
         return saved;
     }
 
