@@ -1,5 +1,7 @@
 package com.trendradar.scheduler;
 
+import com.trendradar.channel.service.ChannelCollectService;
+import com.trendradar.keyword.service.KeywordTrendService;
 import com.trendradar.tag.service.AlgorithmTagService;
 import com.trendradar.trending.domain.TrendingVideo;
 import com.trendradar.trending.service.TrendingCollectService;
@@ -26,6 +28,12 @@ class TrendingSchedulerTest {
 
     @Mock
     private AlgorithmTagService algorithmTagService;
+
+    @Mock
+    private ChannelCollectService channelCollectService;
+
+    @Mock
+    private KeywordTrendService keywordTrendService;
 
     @InjectMocks
     private TrendingScheduler trendingScheduler;
