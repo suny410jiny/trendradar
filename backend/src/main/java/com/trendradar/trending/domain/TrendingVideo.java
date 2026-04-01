@@ -57,6 +57,12 @@ public class TrendingVideo {
     @Column(name = "collected_at", nullable = false)
     private OffsetDateTime collectedAt;
 
+    @Column(name = "youtube_tags", columnDefinition = "TEXT")
+    private String youtubeTags;
+
+    @Column(name = "is_short")
+    private Boolean isShort;
+
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
@@ -70,7 +76,8 @@ public class TrendingVideo {
                           String countryCode, Integer categoryId, Integer rankPosition,
                           Long viewCount, Long likeCount, Long commentCount,
                           OffsetDateTime publishedAt, String thumbnailUrl,
-                          String duration, OffsetDateTime collectedAt) {
+                          String duration, OffsetDateTime collectedAt,
+                          String youtubeTags, Boolean isShort) {
         this.videoId = videoId;
         this.title = title;
         this.channelTitle = channelTitle;
@@ -84,5 +91,17 @@ public class TrendingVideo {
         this.thumbnailUrl = thumbnailUrl;
         this.duration = duration;
         this.collectedAt = collectedAt;
+        this.youtubeTags = youtubeTags;
+        this.isShort = isShort;
+    }
+
+    /**
+     * YouTube 태그를 List로 반환
+     */
+    public java.util.List<String> getYoutubeTagList() {
+        if (youtubeTags == null || youtubeTags.isBlank()) {
+            return java.util.List.of();
+        }
+        return java.util.Arrays.asList(youtubeTags.split(","));
     }
 }

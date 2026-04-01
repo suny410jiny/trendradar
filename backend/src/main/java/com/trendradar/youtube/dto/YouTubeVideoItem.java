@@ -24,6 +24,7 @@ public class YouTubeVideoItem {
         private String channelTitle;
         private String categoryId;
         private Thumbnails thumbnails;
+        private java.util.List<String> tags;  // YouTube 영상 태그/키워드
     }
 
     @Getter

@@ -43,7 +43,7 @@ class TrendingControllerTest {
                 .rankPosition(1).viewCount(100L).tags(List.of("SURGE"))
                 .build();
 
-        given(trendingService.getTrending(eq("KR"), isNull(), eq(10)))
+        given(trendingService.getTrending(eq("KR"), isNull(), isNull(), eq(10)))
                 .willReturn(List.of(video));
 
         // When & Then

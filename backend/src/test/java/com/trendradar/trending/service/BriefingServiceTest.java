@@ -49,7 +49,7 @@ class BriefingServiceTest {
                 .countryCode("KR").rankPosition(1).viewCount(5_000_000L)
                 .tags(List.of())
                 .build();
-        given(trendingService.getTrending("KR", null, 10)).willReturn(List.of(video));
+        given(trendingService.getTrending("KR", null, null, 10)).willReturn(List.of(video));
         given(claudeApiClient.generateBriefing(anyString()))
                 .willReturn("한국 YouTube에서 K-POP이 강세입니다.");
 

@@ -27,11 +27,31 @@ public class TrendingVideoResponse {
     private final OffsetDateTime collectedAt;
     private final List<String> tags;
 
+    // 순위 변동 정보
+    private final Integer previousRank;
+    private final Integer rankChange;
+    private final String rankChangeType;
+
+    // 타겟 연령대 추론
+    private final String targetDemographic;
+
+    // YouTube 원본 태그/키워드
+    private final List<String> youtubeTags;
+
+    // Shorts 여부
+    private final Boolean isShort;
+
     public static TrendingVideoResponse from(TrendingVideo video) {
         return from(video, List.of());
     }
 
     public static TrendingVideoResponse from(TrendingVideo video, List<String> tags) {
+        return from(video, tags, null, null, null, null);
+    }
+
+    public static TrendingVideoResponse from(TrendingVideo video, List<String> tags,
+                                              Integer previousRank, Integer rankChange,
+                                              String rankChangeType, String targetDemographic) {
         return TrendingVideoResponse.builder()
                 .videoId(video.getVideoId())
                 .title(video.getTitle())
@@ -49,6 +69,12 @@ public class TrendingVideoResponse {
                 .duration(video.getDuration())
                 .collectedAt(video.getCollectedAt())
                 .tags(tags)
+                .previousRank(previousRank)
+                .rankChange(rankChange)
+                .rankChangeType(rankChangeType)
+                .targetDemographic(targetDemographic)
+                .youtubeTags(video.getYoutubeTagList())
+                .isShort(video.getIsShort())
                 .build();
     }
 }

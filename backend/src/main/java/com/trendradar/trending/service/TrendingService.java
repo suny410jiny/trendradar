@@ -1,5 +1,6 @@
 package com.trendradar.trending.service;
 
+import com.trendradar.stats.service.DemographicInferenceService;
 import com.trendradar.trending.domain.AlgorithmTag;
 import com.trendradar.trending.domain.TrendingVideo;
 import com.trendradar.trending.domain.ViewSnapshot;
@@ -30,6 +31,7 @@ public class TrendingService {
     private final AlgorithmTagRepository algorithmTagRepository;
     private final ViewSnapshotRepository viewSnapshotRepository;
     private final CountryRepository countryRepository;
+    private final DemographicInferenceService demographicService;
 
     public List<TrendingVideoResponse> getTrending(String countryCode, Integer categoryId, String tagType, int limit) {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -72,8 +74,26 @@ public class TrendingService {
                         Collectors.mapping(AlgorithmTag::getTagType, Collectors.toList())
                 ));
 
+        // 순위 변동 계산: 이전 수집(2~4시간 전)과 비교
+        Map<String, Integer> previousRankMap = getPreviousRankMap(countryCode, from);
+
         return videos.stream()
-                .map(v -> TrendingVideoResponse.from(v, tagMap.getOrDefault(v.getVideoId(), List.of())))
+                .map(v -> {
+                    // 태그 중복 제거
+                    List<String> tags = tagMap.getOrDefault(v.getVideoId(), List.of())
+                            .stream().distinct().toList();
+
+                    // 순위 변동
+                    Integer prevRank = previousRankMap.get(v.getVideoId());
+                    Integer rankChange = prevRank != null ? prevRank - v.getRankPosition() : null;
+                    String rankChangeType = prevRank == null ? "NEW" :
+                            rankChange > 0 ? "UP" : rankChange < 0 ? "DOWN" : "SAME";
+
+                    // 연령대 추론
+                    String demographic = demographicService.inferPrimaryDemographic(v);
+
+                    return TrendingVideoResponse.from(v, tags, prevRank, rankChange, rankChangeType, demographic);
+                })
                 .toList();
     }
 
@@ -96,5 +116,22 @@ public class TrendingService {
         return countryRepository.findAllByOrderByCodeAsc().stream()
                 .map(CountryResponse::from)
                 .toList();
+    }
+
+    /**
+     * 이전 수집(2~4시간 전)의 videoId → 순위 매핑 조회
+     */
+    private Map<String, Integer> getPreviousRankMap(String countryCode, OffsetDateTime currentFrom) {
+        OffsetDateTime prevFrom = currentFrom.minusHours(2);
+
+        List<TrendingVideo> previous = trendingVideoRepository
+                .findByCountryCodeAndCollectedAtBetweenOrderByRankPositionAsc(countryCode, prevFrom, currentFrom);
+
+        return previous.stream()
+                .collect(Collectors.toMap(
+                        TrendingVideo::getVideoId,
+                        TrendingVideo::getRankPosition,
+                        (r1, r2) -> r1
+                ));
     }
 }

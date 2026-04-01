@@ -20,6 +20,16 @@ export interface TrendingVideo {
   duration: string;
   collectedAt: string;
   tags: string[];
+  // 순위 변동
+  previousRank: number | null;
+  rankChange: number | null;
+  rankChangeType: 'UP' | 'DOWN' | 'SAME' | 'NEW' | null;
+  // 타겟 연령대
+  targetDemographic: string | null;
+  // YouTube 원본 태그
+  youtubeTags: string[];
+  // Shorts 여부
+  isShort: boolean;
 }
 
 export interface Country {
@@ -69,4 +79,50 @@ export interface BriefingResponse {
   summary: string;
   topVideos: TrendingVideo[];
   generatedAt: string;
+}
+
+// === Stats API 타입 ===
+
+export interface StatsOverview {
+  countryCode: string;
+  countryName: string;
+  totalVideos: number;
+  newEntryCount: number;
+  surgeCount: number;
+  avgEngagementRate: number;
+  totalViews: number;
+  uniqueVideos24h: number;
+  categoryDistribution: CategoryStat[];
+  tagDistribution: TagStat[];
+  demographicDistribution: DemographicStat[];
+  generatedAt: string;
+}
+
+export interface CategoryStat {
+  categoryId: number;
+  categoryName: string;
+  videoCount: number;
+  totalViews: number;
+  avgViews: number;
+  percentage: number;
+}
+
+export interface TagStat {
+  tagType: string;
+  tagLabel: string;
+  videoCount: number;
+  percentage: number;
+}
+
+export interface DemographicStat {
+  ageGroup: string;
+  videoCount: number;
+  percentage: number;
+  topCategories: string[];
+}
+
+export interface TrendingKeyword {
+  keyword: string;
+  count: number;
+  percentage: number;
 }

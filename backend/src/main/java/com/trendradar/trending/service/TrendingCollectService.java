@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.scheduling.annotation.Async;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -78,6 +79,8 @@ public class TrendingCollectService {
                 .thumbnailUrl(extractThumbnailUrl(snippet))
                 .duration(content != null ? content.getDuration() : null)
                 .collectedAt(collectedAt)
+                .youtubeTags(extractYoutubeTags(snippet))
+                .isShort(isShortVideo(content))
                 .build();
     }
 
@@ -96,6 +99,23 @@ public class TrendingCollectService {
             return OffsetDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    private String extractYoutubeTags(YouTubeVideoItem.Snippet snippet) {
+        if (snippet == null || snippet.getTags() == null || snippet.getTags().isEmpty()) {
+            return null;
+        }
+        return String.join(",", snippet.getTags());
+    }
+
+    private boolean isShortVideo(YouTubeVideoItem.ContentDetails content) {
+        if (content == null || content.getDuration() == null) return false;
+        try {
+            Duration duration = Duration.parse(content.getDuration());
+            return duration.getSeconds() <= 60;
+        } catch (Exception e) {
+            return false;
         }
     }
 
