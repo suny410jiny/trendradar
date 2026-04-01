@@ -54,6 +54,9 @@ public class TrendingVideo {
     @Column(length = 20)
     private String duration;
 
+    @Column(name = "channel_id", length = 30)
+    private String channelId;
+
     @Column(name = "collected_at", nullable = false)
     private OffsetDateTime collectedAt;
 
@@ -76,7 +79,7 @@ public class TrendingVideo {
                           String countryCode, Integer categoryId, Integer rankPosition,
                           Long viewCount, Long likeCount, Long commentCount,
                           OffsetDateTime publishedAt, String thumbnailUrl,
-                          String duration, OffsetDateTime collectedAt,
+                          String duration, String channelId, OffsetDateTime collectedAt,
                           String youtubeTags, Boolean isShort) {
         this.videoId = videoId;
         this.title = title;
@@ -90,6 +93,7 @@ public class TrendingVideo {
         this.publishedAt = publishedAt;
         this.thumbnailUrl = thumbnailUrl;
         this.duration = duration;
+        this.channelId = channelId;
         this.collectedAt = collectedAt;
         this.youtubeTags = youtubeTags;
         this.isShort = isShort;

@@ -78,6 +78,7 @@ public class TrendingCollectService {
                 .publishedAt(parseDateTime(snippet != null ? snippet.getPublishedAt() : null))
                 .thumbnailUrl(extractThumbnailUrl(snippet))
                 .duration(content != null ? content.getDuration() : null)
+                .channelId(snippet != null ? snippet.getChannelId() : null)
                 .collectedAt(collectedAt)
                 .youtubeTags(extractYoutubeTags(snippet))
                 .isShort(isShortVideo(content))

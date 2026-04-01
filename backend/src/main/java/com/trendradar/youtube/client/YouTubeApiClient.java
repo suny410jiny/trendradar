@@ -1,11 +1,14 @@
 package com.trendradar.youtube.client;
 
+import com.trendradar.youtube.dto.YouTubeChannelResponse;
 import com.trendradar.youtube.dto.YouTubeResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -36,5 +39,23 @@ public class YouTubeApiClient {
         log.info("Fetching trending videos for region={}, maxResults={}", regionCode, maxResults);
 
         return restTemplate.getForObject(url, YouTubeResponse.class);
+    }
+
+    public YouTubeChannelResponse fetchChannels(List<String> channelIds) {
+        if (channelIds == null || channelIds.isEmpty()) {
+            return new YouTubeChannelResponse();
+        }
+
+        String ids = String.join(",", channelIds);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl)
+                .path("/youtube/v3/channels")
+                .queryParam("part", "snippet,statistics")
+                .queryParam("id", ids)
+                .queryParam("key", apiKey)
+                .toUriString();
+
+        log.info("Fetching {} channels", channelIds.size());
+
+        return restTemplate.getForObject(url, YouTubeChannelResponse.class);
     }
 }
