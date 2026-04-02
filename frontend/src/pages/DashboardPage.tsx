@@ -4,7 +4,7 @@ import { useBriefing } from '../hooks/useBriefing';
 import { useChannelRanking } from '../hooks/useChannels';
 import { useKeywordTrending } from '../hooks/useKeywords';
 import { Link } from 'react-router-dom';
-import { GRADE_CONFIG, COUNTRY_FLAGS } from '../types';
+import { GRADE_CONFIG } from '../types';
 
 export default function DashboardPage() {
   const { country } = useFilterStore();
