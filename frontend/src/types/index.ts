@@ -126,3 +126,105 @@ export interface TrendingKeyword {
   count: number;
   percentage: number;
 }
+
+// === v2 API 타입 ===
+
+export interface ChannelRanking {
+  channelId: string;
+  title: string;
+  thumbnailUrl: string | null;
+  subscriberCount: number;
+  totalViewCount: number;
+  surgeScore: number;
+  grade: 'S' | 'A' | 'B' | 'C' | 'D';
+  gradeLabel: string;
+  darkhorse: boolean;
+  trendingVideoCount: number;
+  burstRatio: number;
+}
+
+export interface ChannelDetail {
+  channelId: string;
+  title: string;
+  thumbnailUrl: string | null;
+  subscriberCount: number;
+  videoCount: number;
+  totalViewCount: number;
+  surgeScore: number;
+  grade: string;
+  gradeLabel: string;
+  darkhorse: boolean;
+  firstSeenAt: string;
+  aiAnalysis: AiAnalysisResult | null;
+}
+
+export interface ChannelSnapshot {
+  channelId: string;
+  subscriberCount: number;
+  videoCount: number;
+  totalViewCount: number;
+  trendingVideoCount: number;
+  snapshotAt: string;
+}
+
+export interface AiAnalysisResult {
+  analysisType: string;
+  targetId: string;
+  content: string;
+  modelUsed: string;
+  createdAt: string;
+  fromCache: boolean;
+}
+
+export interface KeywordTrend {
+  keyword: string;
+  videoCount: number;
+  totalViews: number;
+  avgEngagement: number;
+  keywordScore: number;
+}
+
+export interface KeywordTimeline {
+  keyword: string;
+  periodType: string;
+  periodStart: string;
+  videoCount: number;
+  totalViews: number;
+}
+
+export interface CrossBorderOpportunity {
+  keyword: string;
+  trendingCountries: string[];
+  targetCountry: string;
+  totalVideoCount: number;
+  totalViews: number;
+}
+
+export interface CrossBorderPropagation {
+  keyword: string;
+  propagationPath: {
+    countryCode: string;
+    firstSeenAt: string;
+  }[];
+}
+
+export interface CrossBorderGlobalLocal {
+  globalKeywords: {
+    keyword: string;
+    countries: string[];
+    videoCount: number;
+  }[];
+  localKeywords: {
+    keyword: string;
+    countries: string[];
+    videoCount: number;
+  }[];
+}
+
+export const GRADE_CONFIG: Record<string, { color: string; bgColor: string }> = {
+  S: { color: 'text-purple-400', bgColor: 'bg-purple-500/20' },
+  A: { color: 'text-red-400', bgColor: 'bg-red-500/20' },
+  B: { color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
+  C: { color: 'text-yellow-400', bgColor: 'bg-yellow-500/20' },
+  D: { color: 'text-gray-400', bgColor: 'bg-gray-500/20' },
+};
