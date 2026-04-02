@@ -96,4 +96,117 @@ public class KeywordTrendService {
         log.info("Keyword aggregation completed: {} keywords for country={}",
                 keywordToVideos.size(), countryCode);
     }
+
+    /**
+     * 일별 집계: 해당 날짜의 모든 HOUR 레코드를 keyword별로 합산하여 DAY 레코드 UPSERT
+     */
+    @Transactional
+    public void aggregateDailyKeywords(String countryCode, OffsetDateTime date) {
+        OffsetDateTime dayStart = date.truncatedTo(ChronoUnit.DAYS);
+        OffsetDateTime dayEnd = dayStart.plusDays(1);
+
+        List<KeywordTrend> hourlyRecords = keywordTrendRepository
+                .findByCountryCodeAndPeriodTypeAndPeriodStartBetween(
+                        countryCode, PeriodType.HOUR, dayStart, dayEnd);
+
+        if (hourlyRecords.isEmpty()) {
+            log.info("No hourly records found for daily aggregation: country={}, date={}",
+                    countryCode, dayStart);
+            return;
+        }
+
+        aggregateAndUpsert(hourlyRecords, countryCode, PeriodType.DAY, dayStart);
+
+        log.info("Daily keyword aggregation completed: country={}, date={}", countryCode, dayStart);
+    }
+
+    /**
+     * 주별 집계: weekStart부터 7일간의 모든 DAY 레코드를 keyword별로 합산하여 WEEK 레코드 UPSERT
+     */
+    @Transactional
+    public void aggregateWeeklyKeywords(String countryCode, OffsetDateTime weekStart) {
+        OffsetDateTime start = weekStart.truncatedTo(ChronoUnit.DAYS);
+        OffsetDateTime end = start.plusWeeks(1);
+
+        List<KeywordTrend> dailyRecords = keywordTrendRepository
+                .findByCountryCodeAndPeriodTypeAndPeriodStartBetween(
+                        countryCode, PeriodType.DAY, start, end);
+
+        if (dailyRecords.isEmpty()) {
+            log.info("No daily records found for weekly aggregation: country={}, weekStart={}",
+                    countryCode, start);
+            return;
+        }
+
+        aggregateAndUpsert(dailyRecords, countryCode, PeriodType.WEEK, start);
+
+        log.info("Weekly keyword aggregation completed: country={}, weekStart={}", countryCode, start);
+    }
+
+    /**
+     * 월별 집계: monthStart부터 해당 월의 모든 DAY 레코드를 keyword별로 합산하여 MONTH 레코드 UPSERT
+     */
+    @Transactional
+    public void aggregateMonthlyKeywords(String countryCode, OffsetDateTime monthStart) {
+        OffsetDateTime start = monthStart.truncatedTo(ChronoUnit.DAYS);
+        OffsetDateTime end = start.plusMonths(1);
+
+        List<KeywordTrend> dailyRecords = keywordTrendRepository
+                .findByCountryCodeAndPeriodTypeAndPeriodStartBetween(
+                        countryCode, PeriodType.DAY, start, end);
+
+        if (dailyRecords.isEmpty()) {
+            log.info("No daily records found for monthly aggregation: country={}, monthStart={}",
+                    countryCode, start);
+            return;
+        }
+
+        aggregateAndUpsert(dailyRecords, countryCode, PeriodType.MONTH, start);
+
+        log.info("Monthly keyword aggregation completed: country={}, monthStart={}", countryCode, start);
+    }
+
+    /**
+     * 공통 집계 로직: 소스 레코드들을 keyword별로 그룹핑 → 합산/평균 → UPSERT
+     */
+    private void aggregateAndUpsert(List<KeywordTrend> sourceRecords, String countryCode,
+                                     PeriodType targetPeriodType, OffsetDateTime periodStart) {
+        Map<String, List<KeywordTrend>> byKeyword = sourceRecords.stream()
+                .collect(Collectors.groupingBy(KeywordTrend::getKeyword));
+
+        for (Map.Entry<String, List<KeywordTrend>> entry : byKeyword.entrySet()) {
+            String keyword = entry.getKey();
+            List<KeywordTrend> records = entry.getValue();
+
+            int totalVideoCount = records.stream()
+                    .mapToInt(KeywordTrend::getVideoCount)
+                    .sum();
+            long totalViews = records.stream()
+                    .mapToLong(KeywordTrend::getTotalViews)
+                    .sum();
+            double avgEngagement = records.stream()
+                    .mapToDouble(KeywordTrend::getAvgEngagement)
+                    .average()
+                    .orElse(0.0);
+
+            Optional<KeywordTrend> existing = keywordTrendRepository
+                    .findByKeywordAndCountryCodeAndPeriodTypeAndPeriodStart(
+                            keyword, countryCode, targetPeriodType, periodStart);
+
+            if (existing.isPresent()) {
+                existing.get().updateStats(totalVideoCount, totalViews, avgEngagement);
+            } else {
+                KeywordTrend newTrend = KeywordTrend.builder()
+                        .keyword(keyword)
+                        .countryCode(countryCode)
+                        .videoCount(totalVideoCount)
+                        .totalViews(totalViews)
+                        .avgEngagement(avgEngagement)
+                        .periodType(targetPeriodType)
+                        .periodStart(periodStart)
+                        .build();
+                keywordTrendRepository.save(newTrend);
+            }
+        }
+    }
 }

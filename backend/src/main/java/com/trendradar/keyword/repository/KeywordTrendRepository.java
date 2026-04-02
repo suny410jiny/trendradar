@@ -24,4 +24,7 @@ public interface KeywordTrendRepository extends JpaRepository<KeywordTrend, Long
 
     List<KeywordTrend> findByCountryCodeAndPeriodTypeAndPeriodStartAfter(
             String countryCode, PeriodType periodType, OffsetDateTime after);
+
+    List<KeywordTrend> findByCountryCodeAndPeriodTypeAndPeriodStartBetween(
+            String countryCode, PeriodType periodType, OffsetDateTime from, OffsetDateTime to);
 }
