@@ -6,12 +6,7 @@ import AlgorithmTagBadge from '@/components/common/AlgorithmTagBadge';
 import ViewTrendChart from '@/components/chart/ViewTrendChart';
 import MetricCard from '@/components/chart/MetricCard';
 import type { TrendingVideo } from '@/types';
-
-function formatCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return n.toLocaleString();
-}
+import { formatCount } from '@/utils/format';
 
 export default function DetailPage() {
   const { videoId } = useParams<{ videoId: string }>();
