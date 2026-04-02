@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useFilterStore } from '../stores/filterStore';
 import { useKeywordTrending } from '../hooks/useKeywords';
+import { formatCount } from '../utils/format';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const PERIODS = [
@@ -24,12 +25,12 @@ export default function KeywordsPage() {
   return (
     <div className="space-y-6" data-cy="keywords-page">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">키워드 트렌드</h1>
-        <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
+        <h1 className="text-xl font-extrabold tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>키워드 트렌드</h1>
+        <div className="flex gap-0.5 bg-secondary rounded-2xl p-1">
           {PERIODS.map(p => (
             <button key={p.value} onClick={() => setPeriod(p.value)}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
-                period === p.value ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'
+              className={`px-4 py-2 text-xs font-semibold rounded-xl transition-colors ${
+                period === p.value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
               }`}>
               {p.label}
             </button>
@@ -37,27 +38,31 @@ export default function KeywordsPage() {
         </div>
       </div>
 
-      {/* Bar Chart */}
       {chartData.length > 0 && (
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-          <h2 className="text-sm text-gray-400 mb-4">키워드별 영상 수</h2>
+        <div className="bg-card rounded-[20px] shadow-[0_1px_3px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.03)] p-8">
+          <h2 className="text-xs font-extrabold uppercase tracking-[1.2px] text-muted-foreground mb-5">키워드별 영상 수</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical">
-                <XAxis type="number" tick={{ fontSize: 12, fill: '#6b7280' }} />
-                <YAxis type="category" dataKey="keyword" width={100} tick={{ fontSize: 12, fill: '#9ca3af' }} />
-                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                         labelStyle={{ color: '#9ca3af' }} />
-                <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                <XAxis type="number" tick={{ fontSize: 12, fill: '#737782' }} />
+                <YAxis type="category" dataKey="keyword" width={100} tick={{ fontSize: 12, fill: '#134e4a' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e2dd', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+                         labelStyle={{ color: '#737782' }} />
+                <Bar dataKey="count" fill="url(#tealGradient)" radius={[0, 8, 8, 0]} />
+                <defs>
+                  <linearGradient id="tealGradient" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#134e4a" />
+                    <stop offset="100%" stopColor="#0f766e" />
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       )}
 
-      {/* Keyword List */}
-      <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-gray-800/50 text-xs text-gray-500 font-medium">
+      <div className="bg-card rounded-[20px] shadow-[0_1px_3px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.03)] overflow-hidden">
+        <div className="grid grid-cols-12 gap-2 px-7 py-3.5 bg-secondary text-xs text-muted-foreground font-semibold uppercase tracking-[0.5px]">
           <div className="col-span-1">#</div>
           <div className="col-span-5">키워드</div>
           <div className="col-span-2 text-right">영상 수</div>
@@ -65,24 +70,20 @@ export default function KeywordsPage() {
           <div className="col-span-2 text-right">참여율</div>
         </div>
         {keywords?.map((kw, i) => (
-          <div key={kw.keyword} className="grid grid-cols-12 gap-2 px-4 py-3 items-center border-t border-gray-800/50">
-            <div className="col-span-1 text-sm font-bold text-gray-500">{i + 1}</div>
-            <div className="col-span-5 text-sm">{kw.keyword}</div>
-            <div className="col-span-2 text-right text-sm text-gray-400">{kw.videoCount}</div>
-            <div className="col-span-2 text-right text-sm text-gray-400">{formatCount(kw.totalViews)}</div>
-            <div className="col-span-2 text-right text-sm text-gray-400">{(kw.avgEngagement * 100).toFixed(1)}%</div>
+          <div key={kw.keyword} className="grid grid-cols-12 gap-2 px-7 py-3.5 items-center border-t border-border/40 hover:bg-secondary/50 transition-colors">
+            <div className={`col-span-1 text-sm font-black ${i < 3 ? 'text-accent' : 'text-border'}`}
+              style={{ fontFamily: 'var(--font-heading)' }}>
+              {String(i + 1).padStart(2, '0')}
+            </div>
+            <div className="col-span-5 text-sm font-semibold">{kw.keyword}</div>
+            <div className="col-span-2 text-right text-sm text-muted-foreground">{kw.videoCount}</div>
+            <div className="col-span-2 text-right text-sm text-muted-foreground">{formatCount(kw.totalViews)}</div>
+            <div className="col-span-2 text-right text-sm text-muted-foreground">{(kw.avgEngagement * 100).toFixed(1)}%</div>
           </div>
         ))}
-        {isLoading && <div className="px-4 py-8 text-center text-gray-600">로딩 중...</div>}
-        {!keywords?.length && !isLoading && <div className="px-4 py-8 text-center text-gray-600">데이터 수집 중...</div>}
+        {isLoading && <div className="px-7 py-12 text-center text-muted-foreground text-sm">로딩 중...</div>}
+        {!keywords?.length && !isLoading && <div className="px-7 py-12 text-center text-muted-foreground text-sm">데이터 수집 중...</div>}
       </div>
     </div>
   );
-}
-
-function formatCount(n: number): string {
-  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return String(n);
 }

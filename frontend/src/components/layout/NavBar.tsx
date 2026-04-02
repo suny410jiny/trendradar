@@ -16,29 +16,34 @@ export default function NavBar() {
   const { country, setCountry } = useFilterStore();
 
   return (
-    <nav className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-14">
+    <nav
+      className="sticky top-0 z-50 border-b border-border/60 bg-background/88 backdrop-blur-xl"
+      data-cy="navbar"
+    >
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <NavLink
             to="/"
-            className="text-lg font-bold text-blue-400 flex items-center gap-2 shrink-0"
+            className="text-[22px] font-black tracking-tight shrink-0"
+            style={{ fontFamily: 'var(--font-heading)' }}
           >
-            📡 TrendRadar
+            <span className="text-primary">Trend</span>
+            <span className="text-accent">Radar</span>
           </NavLink>
 
           {/* Nav Links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 end={item.path === '/'}
                 className={({ isActive }) =>
-                  `px-3 py-2 text-sm rounded-lg transition-colors ${
+                  `px-4 py-2 text-[13px] font-semibold rounded-3xl transition-colors ${
                     isActive
-                      ? 'bg-blue-500/10 text-blue-400 font-medium'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                   }`
                 }
               >
@@ -53,10 +58,10 @@ export default function NavBar() {
               <button
                 key={code}
                 onClick={() => setCountry(code)}
-                className={`px-2 py-1 text-sm rounded transition-colors ${
+                className={`px-3 py-1.5 text-xs font-semibold rounded-2xl border transition-colors ${
                   country === code
-                    ? 'bg-blue-500/20 text-blue-400'
-                    : 'text-gray-500 hover:text-gray-300'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'text-muted-foreground border-transparent hover:border-border'
                 }`}
               >
                 {COUNTRY_FLAGS[code]} {code}

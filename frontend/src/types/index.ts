@@ -60,13 +60,13 @@ export type AlgorithmTag =
   | 'COMEBACK';
 
 export const TAG_CONFIG: Record<AlgorithmTag, { label: string; emoji: string; color: string }> = {
-  SURGE:       { label: '급상승',   emoji: '🔥', color: 'bg-red-500/10 text-red-600 border-red-500/20' },
-  NEW_ENTRY:   { label: '신규진입', emoji: '🆕', color: 'bg-green-500/10 text-green-600 border-green-500/20' },
-  HOT_COMMENT: { label: '화제성',   emoji: '💬', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
-  HIGH_ENGAGE: { label: '고참여율', emoji: '❤️', color: 'bg-pink-500/10 text-pink-600 border-pink-500/20' },
-  LONG_RUN:    { label: '롱런',     emoji: '📺', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
-  GLOBAL:      { label: '글로벌',   emoji: '🌍', color: 'bg-sky-500/10 text-sky-600 border-sky-500/20' },
-  COMEBACK:    { label: '역주행',   emoji: '🔄', color: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
+  SURGE:       { label: '급상승',   emoji: '🔥', color: 'bg-orange-100 text-orange-800 border-orange-200' },
+  NEW_ENTRY:   { label: '신규진입', emoji: '🆕', color: 'bg-teal-100 text-teal-800 border-teal-200' },
+  HOT_COMMENT: { label: '화제성',   emoji: '💬', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+  HIGH_ENGAGE: { label: '고참여율', emoji: '❤️', color: 'bg-pink-100 text-pink-800 border-pink-200' },
+  LONG_RUN:    { label: '롱런',     emoji: '📺', color: 'bg-purple-100 text-purple-800 border-purple-200' },
+  GLOBAL:      { label: '글로벌',   emoji: '🌍', color: 'bg-sky-100 text-sky-800 border-sky-200' },
+  COMEBACK:    { label: '역주행',   emoji: '🔄', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
 };
 
 export const COUNTRY_FLAGS: Record<string, string> = {
@@ -222,9 +222,9 @@ export interface CrossBorderGlobalLocal {
 }
 
 export const GRADE_CONFIG: Record<string, { color: string; bgColor: string }> = {
-  S: { color: 'text-purple-400', bgColor: 'bg-purple-500/20' },
-  A: { color: 'text-red-400', bgColor: 'bg-red-500/20' },
-  B: { color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
-  C: { color: 'text-yellow-400', bgColor: 'bg-yellow-500/20' },
-  D: { color: 'text-gray-400', bgColor: 'bg-gray-500/20' },
+  S: { color: 'text-teal-800', bgColor: 'bg-teal-100' },
+  A: { color: 'text-emerald-800', bgColor: 'bg-emerald-100' },
+  B: { color: 'text-amber-800', bgColor: 'bg-amber-100' },
+  C: { color: 'text-slate-600', bgColor: 'bg-slate-100' },
+  D: { color: 'text-gray-500', bgColor: 'bg-gray-100' },
 };

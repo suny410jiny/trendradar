@@ -4,8 +4,10 @@ import TrendingList from '../components/trending/TrendingList';
 
 export default function TrendingPage() {
   return (
-    <div className="space-y-4" data-cy="trending-page">
-      <h1 className="text-xl font-bold">트렌딩 영상 TOP 50</h1>
+    <div className="space-y-6" data-cy="trending-page">
+      <h1 className="text-xl font-extrabold tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+        트렌딩 영상 TOP 50
+      </h1>
       <div className="flex flex-wrap gap-4">
         <CategoryFilter />
         <AlgorithmTagFilter />
