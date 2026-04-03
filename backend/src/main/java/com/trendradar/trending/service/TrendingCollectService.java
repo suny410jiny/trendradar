@@ -42,6 +42,15 @@ public class TrendingCollectService {
 
         OffsetDateTime collectedAt = OffsetDateTime.now(ZoneOffset.UTC);
 
+        // 같은 시간대(1시간 이내)에 이미 수집된 데이터가 있으면 스킵
+        OffsetDateTime oneHourAgo = collectedAt.minusHours(1);
+        List<TrendingVideo> existing = trendingVideoRepository
+                .findByCountryCodeAndCollectedAtBetweenOrderByRankPositionAsc(countryCode, oneHourAgo, collectedAt);
+        if (!existing.isEmpty()) {
+            log.info("Skipping collection for country={}, already collected {} videos within last hour", countryCode, existing.size());
+            return existing;
+        }
+
         List<TrendingVideo> videos = IntStream.range(0, response.getItems().size())
                 .mapToObj(i -> toTrendingVideo(response.getItems().get(i), countryCode, i + 1, collectedAt))
                 .toList();
